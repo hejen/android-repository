@@ -25,7 +25,25 @@ public class LinkMatcher {
 		return result;
 	}
 	
-	public static List<String> getLinkFromUrl(String urlstr, String referUrl, String linkName){
+	public static List<String> getLink1(String httpText, String linkName){
+		Pattern p = Pattern.compile("href=\"?([^\\s\">]*)\"?[^>]*>"+linkName);
+		Matcher m = p.matcher(httpText);
+		List<String> result = new ArrayList<String>();
+		while(m.find()){
+			result.add(m.group(1).replaceAll("&amp;", "&"));
+		}
+		return result;
+	}
+	
+	public static boolean isHasText(String httpText, String matchText){
+		return httpText.matches(matchText);
+	}
+	
+	public static boolean isLinkHasText(String urlstr, String referUrl, String matchText){
+		return isHasText(getLinkText(urlstr, referUrl), matchText);
+	}
+	
+	public static String getLinkText(String urlstr, String referUrl){
 		URL url;
 		try {
 			url = new URL(urlstr);
@@ -41,7 +59,7 @@ public class LinkMatcher {
 			InputStream is = conn.getInputStream();//得到网络返回的输入流
 			String httpText = readData(is);
 			conn.disconnect();
-			return getLink(httpText, linkName);
+			return httpText;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (ProtocolException e) {
@@ -50,6 +68,10 @@ public class LinkMatcher {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static List<String> getLinkFromUrl(String urlstr, String referUrl, String linkName){
+		return getLink(getLinkText(urlstr, referUrl), linkName);
 	}
 	
 	private static String readData(InputStream is) {
