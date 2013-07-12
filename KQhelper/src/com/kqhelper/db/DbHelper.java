@@ -1,16 +1,16 @@
-package com.kqhelper;
+package com.kqhelper.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DbOpenHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
 	
 	private static final String dbName = "KQhelperDb.db";
 	
 	private static final int version = 1;
 
-	public DbOpenHelper(Context context) {
+	public DbHelper(Context context) {
 		super(context, dbName, null, version);
 	}
 
