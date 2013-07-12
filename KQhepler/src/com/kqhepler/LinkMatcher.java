@@ -25,8 +25,8 @@ public class LinkMatcher {
 		return result;
 	}
 	
-	public static List<String> getLink1(String httpText, String linkName){
-		Pattern p = Pattern.compile("href=\"?([^\\s\">]*)\"?[^>]*>"+linkName);
+	public static List<String> getSaleCardLinkByPrice(String httpText, String price){
+		Pattern p = Pattern.compile("\\["+price+"].+?href=\"?([^\\s\">]*)\"?[^>]*>³öÊÛ");
 		Matcher m = p.matcher(httpText);
 		List<String> result = new ArrayList<String>();
 		while(m.find()){

@@ -40,8 +40,12 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 			if (fetchResult.matches("换卡区满了")){
 				return;
 			}
-			
-		}while(true);
+			List<String> baseCardSellLinks = LinkMatcher.getSaleCardLinkByPrice(fetchResult, "10");
+			while (baseCardSellLinks!=null && baseCardSellLinks.size()!=0){
+				baseCardSellLinks = LinkMatcher.getSaleCardLinkByPrice(LinkMatcher.getLinkText(baseCardSellLinks.get(0), urlstr), "10");
+			}
+			fetchResult = LinkMatcher.getLinkText(fetchUrl, urlstr);
+		}while(!fetchResult.matches("换卡区满了") && LinkMatcher.getSaleCardLinkByPrice(fetchResult, "10").size()!=0);
 	}
 
 	private void pickCard(String urlstr){
