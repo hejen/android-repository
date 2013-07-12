@@ -1,16 +1,13 @@
 package com.kqhelper;
 
-import com.kqhepler.R;
-import com.kqhepler.R.id;
-import com.kqhepler.R.layout;
-import com.kqhepler.R.menu;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import com.kqhepler.R;
 
 public class MainActivity extends Activity {
 

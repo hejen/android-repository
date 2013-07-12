@@ -1,0 +1,52 @@
+package com.kqhelper.db;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+public class DbManager {
+
+	private DbHelper dbhelper;
+	
+	private SQLiteDatabase db;
+	
+	public DbManager(Context context){
+		dbhelper = new DbHelper(context);
+		db = dbhelper.getWritableDatabase();
+	}
+	
+	public void udpate(String sql){
+		db.execSQL(sql);
+	}
+	
+	public List<Map> query(String sql, String... selectionArgs){
+		List<Map> result = new ArrayList<Map>();
+		Cursor c = db.rawQuery(sql, selectionArgs);
+		String[] colNames = c.getColumnNames();
+		while (c.moveToNext()){
+			Map line = new HashMap();
+			for (String colName: colNames){
+				if (c.getType(c.getColumnIndex(colName))==Cursor.FIELD_TYPE_BLOB){
+					line.put(colName, c.getBlob(c.getColumnIndex(colName)));
+				}else if (c.getType(c.getColumnIndex(colName))==Cursor.FIELD_TYPE_FLOAT){
+					line.put(colName, c.getFloat(c.getColumnIndex(colName)));
+				}else if (c.getType(c.getColumnIndex(colName))==Cursor.FIELD_TYPE_INTEGER){
+					line.put(colName, c.getInt(c.getColumnIndex(colName)));
+				}else if (c.getType(c.getColumnIndex(colName))==Cursor.FIELD_TYPE_STRING){
+					line.put(colName, c.getString(c.getColumnIndex(colName)));
+				}
+			}
+			result.add(line);
+		}
+		return result;
+	}
+	
+	public void close(){
+		db.close();
+	}
+}
