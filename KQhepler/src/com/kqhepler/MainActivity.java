@@ -19,6 +19,8 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				QQCardHelperWorker qchw = new QQCardHelperWorker(findViewById(R.id.editText1));
 				qchw.execute("http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_mainpage?sid=AYASVZlbvJNzrPaLoUB6bKpb&g_f=19011");
+				QQCardHelperWorker qchw1 = new QQCardHelperWorker(findViewById(R.id.editText1));
+				qchw1.execute("http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_mainpage?sid=AdIgWDifiRcX8tASMSKYVb1Z&g_f=19011");
 			}
 		});
 	}

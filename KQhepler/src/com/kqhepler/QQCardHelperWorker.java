@@ -26,15 +26,21 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		String urlstr = params[0];
 		pickCard(urlstr);
 		fetchCard(urlstr);
+		refreshAllCardInfo(urlstr);
 		return null;
 	}
 	
+	private void refreshAllCardInfo(String urlstr) {
+		
+	}
+
 	private void fetchCard(String urlstr) {
 		List<String> fetchUrls= LinkMatcher.getLinkFromUrl(urlstr, null, "³é¿¨");
 		String fetchUrl = null;
-		if (fetchUrls!=null){
-			fetchUrl = fetchUrls.get(0);
+		if (fetchUrls==null || fetchUrls.size()==0){
+			return;
 		}
+		fetchUrl = fetchUrls.get(0);
 		String fetchResult = LinkMatcher.getLinkText(fetchUrl, urlstr);
 		do{
 			if (fetchResult.matches("»»¿¨ÇøÂúÁË")){

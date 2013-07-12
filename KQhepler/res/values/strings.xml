@@ -4,5 +4,6 @@
     <string name="app_name">KQhepler</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="startWork">开始工作</string>
 
 </resources>
