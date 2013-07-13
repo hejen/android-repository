@@ -19,12 +19,18 @@ public class MainActivity extends Activity {
 		btnStartWork.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				QQCardHelperWorker qchw = new QQCardHelperWorker(findViewById(R.id.editText1));
-				qchw.execute("http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_mainpage?sid=AYASVZlbvJNzrPaLoUB6bKpb&g_f=19011");
-				QQCardHelperWorker qchw1 = new QQCardHelperWorker(findViewById(R.id.editText1));
-				qchw1.execute("http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_mainpage?sid=AdIgWDifiRcX8tASMSKYVb1Z&g_f=19011");
-				QQCardHelperWorker qchw2 = new QQCardHelperWorker(findViewById(R.id.editText1));
-				qchw2.execute("http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_mainpage?sid=ARgcN0nyTguSGHnYO2ZcJ0hc&g_f=19011");
+				QQCardHelperWorker qchw5 = new QQCardHelperWorker("ARgcN0nyTguSGHnYO2ZcJ0hc", MainActivity.this, findViewById(R.id.editText1));
+				qchw5.execute("refreshCardInfo");
+				QQCardHelperWorker qchw = new QQCardHelperWorker("AYASVZlbvJNzrPaLoUB6bKpb", MainActivity.this, findViewById(R.id.editText1));
+				qchw.execute("dailyWork");
+//				QQCardHelperWorker qchw1 = new QQCardHelperWorker("AdIgWDifiRcX8tASMSKYVb1Z", findViewById(R.id.editText1));
+//				qchw1.execute("dailyWork");
+//				QQCardHelperWorker qchw2 = new QQCardHelperWorker("ARgcN0nyTguSGHnYO2ZcJ0hc", findViewById(R.id.editText1));
+//				qchw2.execute("dailyWork");
+//				QQCardHelperWorker qchw3 = new QQCardHelperWorker("ARXRV85sJGOw5eCjMthxuIta", findViewById(R.id.editText1));
+//				qchw3.execute("dailyWork");
+//				QQCardHelperWorker qchw4 = new QQCardHelperWorker("Af_WGcIROJ71bPEuK0x3XA1a", findViewById(R.id.editText1));
+//				qchw4.execute("dailyWork");
 			}
 		});
 	}

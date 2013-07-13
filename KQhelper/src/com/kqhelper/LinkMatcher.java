@@ -25,6 +25,26 @@ public class LinkMatcher {
 		return result;
 	}
 	
+	public static int getMatchNum(String httpText, String matchStr){
+		Pattern p = Pattern.compile(matchStr);
+		Matcher m = p.matcher(httpText);
+		int result = 0;
+		while(m.find()){
+			result++;
+		}
+		return result;
+	}
+	
+	public static List<String> getMatchString(String httpText, String matchStr){
+		Pattern p = Pattern.compile(matchStr);
+		Matcher m = p.matcher(httpText);
+		List<String> result = new ArrayList<String>();
+		while(m.find()){
+			result.add(m.group());
+		}
+		return result;
+	}
+	
 	public static List<String> getSaleCardLinkByPrice(String httpText, String price){
 		Pattern p = Pattern.compile("\\["+price+"].+?href=\"?([^\\s\">]*)\"?[^>]*>出售");
 		Matcher m = p.matcher(httpText);
@@ -59,7 +79,7 @@ public class LinkMatcher {
 			InputStream is = conn.getInputStream();//得到网络返回的输入流
 			String httpText = readData(is);
 			conn.disconnect();
-			return httpText;
+			return httpText.replaceAll("&amp;", "&");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (ProtocolException e) {

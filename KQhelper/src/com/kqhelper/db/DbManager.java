@@ -20,8 +20,8 @@ public class DbManager {
 		db = dbhelper.getWritableDatabase();
 	}
 	
-	public void udpate(String sql){
-		db.execSQL(sql);
+	public void udpate(String sql, String... bindArgs){
+		db.execSQL(sql, bindArgs);
 	}
 	
 	public List<Map> query(String sql, String... selectionArgs){
