@@ -9,24 +9,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.os.AsyncTask;
-import android.view.View;
-import android.widget.TextView;
 
 import com.kqhelper.db.DbManager;
 
 public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 
-	private View[] views;
-	
 	private String sid;
 	
 	private final int cardLevel = 1;
 	
 	private Context context;
 	
-	public QQCardHelperWorker(String sid, Context context, View... views){
-		this.views = views;
+	public QQCardHelperWorker(String sid, Context context){
 		this.sid = sid;
 		this.context = context;
 	}
@@ -50,8 +47,6 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 	@Override
 	protected void onProgressUpdate(String... values) {
 		super.onProgressUpdate(values);
-		TextView tv = (TextView)views[0];
-		tv.setText(values[0]);
 	}
 
 	@Override
@@ -63,7 +58,9 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		}else if ("refreshCardInfo".equalsIgnoreCase(action)){
 			refreshAllCardInfo();
 		}
-		publishProgress(sid+"完成");
+		Intent intent = new Intent("com.kqhelper.message");
+		intent.putExtra("message", sid+"完成");
+		context.sendBroadcast(intent);
 		return null;
 	}
 	
