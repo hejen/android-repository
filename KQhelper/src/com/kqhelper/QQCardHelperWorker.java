@@ -82,6 +82,8 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 			}while (curPage<=pageNum);
 		}
 		DbManager db = new DbManager(context);
+		List<String[]> cardSuitsParams = new ArrayList<String[]>();
+		//TODO 组装套卡参数与卡片参数
 	}
 	
 	private List<Map> getCardInfo(Map cardSuit) {

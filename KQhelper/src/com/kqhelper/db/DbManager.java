@@ -46,6 +46,15 @@ public class DbManager {
 		return result;
 	}
 	
+	public void batchUpdate(String sql, List<String[]> params){
+		db.beginTransaction();
+		for (String[] param: params){
+			db.execSQL(sql, param);
+		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
+	}
+	
 	public void close(){
 		db.close();
 	}
