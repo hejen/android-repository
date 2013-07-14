@@ -20,7 +20,7 @@ public class DbManager {
 		db = dbhelper.getWritableDatabase();
 	}
 	
-	public void udpate(String sql, String... bindArgs){
+	public void update(String sql, String... bindArgs){
 		db.execSQL(sql, bindArgs);
 	}
 	
