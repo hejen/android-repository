@@ -20,6 +20,26 @@ import com.kqhepler.R;
 
 public class MainActivity extends Activity {
 
+	private ServiceConnection sc = new ServiceConnection() {
+		
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			
+		}
+		
+		@Override
+		public void onServiceConnected(ComponentName arg0, IBinder arg1) {
+			
+		}
+	};
+	
+	@Override
+	protected void onDestroy() {
+		unbindService(sc);
+		stopService(new Intent(MainActivity.this, QQCardHelperWorkerService.class));
+		super.onDestroy();
+	}
+
 	private EditText text;
 	
 	@Override
@@ -37,18 +57,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, QQCardHelperWorkerService.class);
 				startService(intent);
-				bindService(intent, new ServiceConnection() {
-					
-					@Override
-					public void onServiceDisconnected(ComponentName cName) {
-						
-					}
-					
-					@Override
-					public void onServiceConnected(ComponentName cName, IBinder binder) {
-						
-					}
-				}, BIND_AUTO_CREATE);
+				bindService(intent, sc, BIND_AUTO_CREATE);
 				Toast.makeText(MainActivity.this, "开始工作....", Toast.LENGTH_LONG).show();
 			}
 		});

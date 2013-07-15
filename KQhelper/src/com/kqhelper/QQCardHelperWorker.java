@@ -44,6 +44,10 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		return getCardThemeInfoUrl(themeid)+"&price="+price;
 	}
 	
+	private String getChangeBoxUrl(){
+		return "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid="+sid;
+	}
+	
 	@Override
 	protected void onProgressUpdate(String... values) {
 		super.onProgressUpdate(values);
@@ -81,7 +85,29 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 				curPage++;
 			}while (curPage<=pageNum);
 		}
+		List<String[]> cardSuitsParams = new ArrayList<String[]>();
+		for (Map cardSuit: cardSuits){
+			String[] param = new String[3];
+			param[0] = cardSuit.get("cThemeid").toString();
+			param[1] = cardSuit.get("iLevel").toString();
+			param[2] = cardSuit.get("cName").toString();
+			cardSuitsParams.add(param);
+		}
+		List<String[]> cardInfoParams = new ArrayList<String[]>();
+		for (Map cardInfoParam: cardInfo){
+			String[] param = new String[5];
+			param[0] = cardInfoParam.get("cThemeid").toString();
+			param[1] = cardInfoParam.get("cName").toString();
+			param[2] = cardInfoParam.get("iPrice").toString();
+			param[3] = cardInfoParam.get("iIsBottom").toString();
+			param[4] = cardInfoParam.get("cSubs")==null?null:cardInfoParam.get("cSubs").toString();
+			cardInfoParams.add(param);
+		}
 		DbManager db = new DbManager(context);
+		db.update("delete from CO_CardSuit");
+		db.update("delete from CO_CardInfo");
+		db.batchUpdate("insert into CO_CardSuit(cThemeid,iLevel,cName) values(?,?,?)", cardSuitsParams);
+		db.batchUpdate("insert into CO_CardInfo(cThemeid,cName,iPrice,iIsBottom,cSubs) values(?,?,?,?,?)", cardInfoParams);
 	}
 	
 	private List<Map> getCardInfo(Map cardSuit) {
@@ -160,20 +186,21 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		List<String> fetchUrls= LinkMatcher.getLinkFromUrl(urlstr, null, "³é¿¨");
 		String fetchUrl = null;
 		if (fetchUrls==null || fetchUrls.size()==0){
-			return;
+			fetchUrl = this.getChangeBoxUrl();
+		}else{
+			fetchUrl = fetchUrls.get(0);
 		}
-		fetchUrl = fetchUrls.get(0);
 		String fetchResult = LinkMatcher.getLinkText(fetchUrl, urlstr);
 		do{
-			if (fetchResult.matches("»»¿¨ÇøÂúÁË")){
+			List<String> baseCardSellLinks = LinkMatcher.getSaleCardLinkByPrice(fetchResult, "10");
+			if (baseCardSellLinks.size()==0){
 				return;
 			}
-			List<String> baseCardSellLinks = LinkMatcher.getSaleCardLinkByPrice(fetchResult, "10");
 			while (baseCardSellLinks!=null && baseCardSellLinks.size()!=0){
 				baseCardSellLinks = LinkMatcher.getSaleCardLinkByPrice(LinkMatcher.getLinkText(baseCardSellLinks.get(0), urlstr), "10");
 			}
 			fetchResult = LinkMatcher.getLinkText(fetchUrl, urlstr);
-		}while(!fetchResult.matches("»»¿¨ÇøÂúÁË") && LinkMatcher.getSaleCardLinkByPrice(fetchResult, "10").size()!=0);
+		}while(LinkMatcher.getSaleCardLinkByPrice(fetchResult, "10").size()!=0);
 	}
 
 	private void pickCard(String urlstr){

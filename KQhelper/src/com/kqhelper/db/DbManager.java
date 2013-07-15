@@ -20,7 +20,7 @@ public class DbManager {
 		db = dbhelper.getWritableDatabase();
 	}
 	
-	public void udpate(String sql, String... bindArgs){
+	public void update(String sql, String... bindArgs){
 		db.execSQL(sql, bindArgs);
 	}
 	
@@ -44,6 +44,15 @@ public class DbManager {
 			result.add(line);
 		}
 		return result;
+	}
+	
+	public void batchUpdate(String sql, List<String[]> params){
+		db.beginTransaction();
+		for (String[] param: params){
+			db.execSQL(sql, param);
+		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
 	}
 	
 	public void close(){
