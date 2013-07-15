@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		unbindService(sc);
-		stopService(new Intent(MainActivity.this, QQCardHelperWorkerService.class));
+		stopService(new Intent(MainActivity.this, QQHelperWorkerService.class));
 		super.onDestroy();
 	}
 
@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
 		btnStartWork.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, QQCardHelperWorkerService.class);
+				Intent intent = new Intent(MainActivity.this, QQHelperWorkerService.class);
 				startService(intent);
 				bindService(intent, sc, BIND_AUTO_CREATE);
 				Toast.makeText(MainActivity.this, "开始工作....", Toast.LENGTH_LONG).show();

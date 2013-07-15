@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.os.AsyncTask;
 
 import com.kqhelper.db.DbManager;
@@ -48,6 +47,14 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		return "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_box?sid="+sid;
 	}
 	
+	private String getStrategyUrl(String themeid){
+		return "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_strategy?sid="+sid+"&themeid="+themeid+"&fuin=0&steal=0";
+	}
+	
+	private String getAllRefineUrl(String themeid){
+		return "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_refine?sid="+sid+"&show=1&pageno=1&fuin=0&steal=0&tid="+themeid;
+	}
+	
 	@Override
 	protected void onProgressUpdate(String... values) {
 		super.onProgressUpdate(values);
@@ -57,8 +64,10 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 	protected Void doInBackground(String... params) {
 		String action = params[0];
 		if ("dailyWork".equalsIgnoreCase(action)){
-			pickCard(this.getMainPageUrl());
-			fetchCard(this.getMainPageUrl());
+			//pickCard(this.getMainPageUrl());
+			//fetchCard(this.getMainPageUrl());
+			putCard(this.getMainPageUrl());
+			stealCard(this.getMainPageUrl());
 		}else if ("refreshCardInfo".equalsIgnoreCase(action)){
 			refreshAllCardInfo();
 		}
@@ -68,6 +77,48 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		return null;
 	}
 	
+	private void stealCard(String mainPageUrl) {
+		
+	}
+
+	private void putCard(String mainPageUrl) {
+		String mainPageText = LinkMatcher.getLinkText(mainPageUrl, null);
+		if (mainPageText.indexOf("空炉位")==-1){
+			return;
+		}
+		String[] putCardids = getPutCardIds();
+		for (int i=0;i<putCardids.length;i++){
+			String strategyResultText = LinkMatcher.getLinkText(this.getStrategyUrl(putCardids[i]), mainPageUrl);
+			if (strategyResultText.indexOf("没有可以合成的卡片")!=-1){
+				continue;
+			}
+			String allRefineText = LinkMatcher.getLinkText(this.getAllRefineUrl(putCardids[i]), mainPageUrl);
+			List<String> canRefineLinks = LinkMatcher.getLink(allRefineText, "合成");
+			for (String canRefineLink: canRefineLinks){
+				canRefineLinks = LinkMatcher.getLinkFromUrl(canRefineLink, mainPageUrl, "合成");
+			}
+			allRefineText = LinkMatcher.getLinkText(this.getAllRefineUrl(putCardids[i]), mainPageUrl);
+			List<Map> refineInfo = parseRefineInfo(allRefineText);
+		}
+	}
+	
+	private List<Map> parseRefineInfo(String allRefineText) {
+		Pattern p = Pattern.compile("\\d+\\.[^\"]+].+?买齐素材卡并合成");
+		Matcher m = p.matcher(allRefineText);
+		List<String> tempText = new ArrayList<String>();
+		while(m.find()){
+			tempText.add(m.group());
+		}
+		
+		return null;
+	}
+
+	private String[] getPutCardIds() {
+		String[] themeids = new String[1];
+		themeids[0] = "52";
+		return themeids;
+	}
+
 	private void refreshAllCardInfo() {
 		List<Map> cardSuits = new ArrayList<Map>();
 		List<Map> cardInfo = new ArrayList<Map>();
