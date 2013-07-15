@@ -2,6 +2,7 @@ package com.kqhelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +65,8 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 	protected Void doInBackground(String... params) {
 		String action = params[0];
 		if ("dailyWork".equalsIgnoreCase(action)){
-			//pickCard(this.getMainPageUrl());
-			//fetchCard(this.getMainPageUrl());
+			pickCard(this.getMainPageUrl());
+			fetchCard(this.getMainPageUrl());
 			putCard(this.getMainPageUrl());
 			stealCard(this.getMainPageUrl());
 		}else if ("refreshCardInfo".equalsIgnoreCase(action)){
@@ -98,19 +99,51 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 				canRefineLinks = LinkMatcher.getLinkFromUrl(canRefineLink, mainPageUrl, "合成");
 			}
 			allRefineText = LinkMatcher.getLinkText(this.getAllRefineUrl(putCardids[i]), mainPageUrl);
+			if (allRefineText.indexOf("没有可以合成的卡片")!=-1){
+				continue;
+			}
 			List<Map> refineInfo = parseRefineInfo(allRefineText);
+			do{
+				Collections.sort(refineInfo, new Comparator<Map>() {
+					@Override
+					public int compare(Map lhs, Map rhs) {
+						int numl = Integer.parseInt(lhs.get("hasNum").toString());
+						int numr = Integer.parseInt(rhs.get("hasNum").toString());
+						if (numl>numr){
+							return 1;
+						}else if (numl<numr){
+							return -1;
+						}
+						return 0;
+					}
+				});
+				LinkMatcher.getLinkText(refineInfo.get(0).get("linkUrl").toString(), this.getAllRefineUrl(putCardids[i]));
+				int hasNum = Integer.parseInt(refineInfo.get(0).get("hasNum").toString());
+				refineInfo.get(0).put("hasNum",++hasNum);
+				mainPageText = LinkMatcher.getLinkText(mainPageUrl, null);
+			}while(mainPageText.indexOf("空炉位")!=-1);
 		}
 	}
 	
 	private List<Map> parseRefineInfo(String allRefineText) {
 		Pattern p = Pattern.compile("\\d+\\.[^\"]+].+?买齐素材卡并合成");
 		Matcher m = p.matcher(allRefineText);
-		List<String> tempText = new ArrayList<String>();
+		List<Map> result = new ArrayList<Map>();
 		while(m.find()){
-			tempText.add(m.group());
+			String temp = m.group();
+			Map map = new HashMap();
+			map.put("cName", LinkMatcher.getMatchString(temp, "\\d+\\.(.+)\\[", 1).trim());
+			String puttingCard = LinkMatcher.getMatchString(temp, "有(\\d+)张正在", 1);
+			int hasCardNum = 0;
+			if (!"".equals(puttingCard)){
+				hasCardNum = Integer.parseInt(puttingCard);
+			}
+			hasCardNum += Integer.parseInt(LinkMatcher.getMatchString(temp, "已有(\\d+)张", 1));
+			map.put("hasNum", hasCardNum);
+			map.put("linkUrl", LinkMatcher.getLink(temp, "买齐素材卡并合成").get(0));
+			result.add(map);
 		}
-		
-		return null;
+		return result;
 	}
 
 	private String[] getPutCardIds() {

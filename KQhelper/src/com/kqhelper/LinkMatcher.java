@@ -35,7 +35,7 @@ public class LinkMatcher {
 		return result;
 	}
 	
-	public static List<String> getMatchString(String httpText, String matchStr){
+	public static List<String> getMatchStrings(String httpText, String matchStr){
 		Pattern p = Pattern.compile(matchStr);
 		Matcher m = p.matcher(httpText);
 		List<String> result = new ArrayList<String>();
@@ -43,6 +43,19 @@ public class LinkMatcher {
 			result.add(m.group());
 		}
 		return result;
+	}
+
+	public static String getMatchString(String httpText, String matchStr, int group){
+		Pattern p = Pattern.compile(matchStr);
+		Matcher m = p.matcher(httpText);
+		while(m.find()){
+			if (group!=0){
+				return m.group(group);
+			}else{
+				return m.group();
+			}
+		}
+		return "";
 	}
 	
 	public static List<String> getSaleCardLinkByPrice(String httpText, String price){
