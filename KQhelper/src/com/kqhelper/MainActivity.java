@@ -40,7 +40,6 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 	}
 
-	private EditText text;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,6 @@ public class MainActivity extends Activity {
 		intentFilter.setPriority(1000);
 		intentFilter.addAction("com.kqhelper.message");
 		registerReceiver(new ServiceMessageReceiver(), intentFilter);
-		text = (EditText)findViewById(R.id.editText1);
 		btnStartWork.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -73,7 +71,6 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			text.setText(intent.getCharSequenceExtra("message"));
 		}
 		
 	}
