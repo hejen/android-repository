@@ -1,5 +1,6 @@
 package com.kqhelper.db;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +25,21 @@ public class WorkListManager {
 		}
 		sql.deleteCharAt(sql.length()-1).append(")");
 		return dbManager.query(sql.toString(), ids);
+	}
+	
+	public Map getWorkList(String type, String sid){
+		List<Map> workList = dbManager.query("select * from CO_WorkList where cWorkType=? and csid=?", type, sid);
+		if (workList==null || workList.size()==0){
+			return new HashMap();
+		}
+		return workList.get(0);
+	}
+	
+	public String getWorkPrefer(String workType, String sid, String prefName){
+		List<Map> preferLine = dbManager.query("select wp.* from CO_WorkPref wp join CO_WorkList wl on wl.cWorkid=wp.cWorkid where wl.cWorkType=? and wl.csid=? and wp.cName=?", workType, sid, prefName);
+		if (preferLine==null || preferLine.size()==0){
+			return null;
+		}
+		return preferLine.get(0).get("cValue")==null?null:preferLine.get(0).get("cValue").toString();
 	}
 }

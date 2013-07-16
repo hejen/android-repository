@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.kqhelper.db.DbManager;
+import com.kqhelper.db.WorkListManager;
 
 public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 
@@ -23,9 +24,12 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 	
 	private Context context;
 	
+	private WorkListManager wm;
+	
 	public QQCardHelperWorker(String sid, Context context){
 		this.sid = sid;
 		this.context = context;
+		this.wm = new WorkListManager(context);
 	}
 	
 	private String getMainPageUrl(){
@@ -56,6 +60,22 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		return "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_refine?sid="+sid+"&show=1&pageno=1&fuin=0&steal=0&tid="+themeid;
 	}
 	
+	private String getStealMainPage(){
+		return "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_stove_steal?sid="+sid;
+	}
+	
+	private String getStealCardUrl(String themeid, String fuin){
+		return "http://mfkp.qzapp.z.qq.com/qshow/cgi-bin/wl_card_refine?sid="+sid+"&show=1&pageno=1&fuin="+fuin+"&steal=1&tid="+themeid;
+	}
+	
+	private String getPrefer(String cName){
+		return wm.getWorkPrefer("1", sid, cName);
+	}
+	
+	private String getWorkLineName(){
+		return wm.getWorkList("1", sid).get("cName")==null?"":wm.getWorkList("1", sid).get("cName").toString();
+	}
+	
 	@Override
 	protected void onProgressUpdate(String... values) {
 		super.onProgressUpdate(values);
@@ -67,19 +87,64 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		if ("dailyWork".equalsIgnoreCase(action)){
 			pickCard(this.getMainPageUrl());
 			fetchCard(this.getMainPageUrl());
-			putCard(this.getMainPageUrl());
-			stealCard(this.getMainPageUrl());
+			if (!"0".equals(getPrefer("smeltCard"))){
+				putCard(this.getMainPageUrl());
+			}
+			if ("1".equals(getPrefer("isSteal"))){
+				stealCard(this.getMainPageUrl());
+			}
 		}else if ("refreshCardInfo".equalsIgnoreCase(action)){
 			refreshAllCardInfo();
 		}
 		Intent intent = new Intent("com.kqhelper.message");
-		intent.putExtra("message", sid+"完成");
+		intent.putExtra("message", getWorkLineName()+"完成");
 		context.sendBroadcast(intent);
 		return null;
 	}
 	
 	private void stealCard(String mainPageUrl) {
-		
+		String mainPageText = LinkMatcher.getLinkText(mainPageUrl, null);
+		if (LinkMatcher.getLink(mainPageText, "偷炉").size()==0){
+			return;
+		}
+		String stealMainPage = LinkMatcher.getLinkText(this.getStealMainPage(), mainPageUrl);
+		String stealLink = LinkMatcher.getLink(stealMainPage, "偷炉").get(0).toString();
+		String fuin = LinkMatcher.getMatchString(stealLink, "fuin=(\\d+)", 1);
+		String[] putCardids = getPutCardIds();
+		for (int i=0;i<putCardids.length;i++){
+			String allRefineText = LinkMatcher.getLinkText(this.getStealCardUrl(putCardids[i], fuin), mainPageUrl);
+			if (allRefineText.indexOf("没有可以合成的卡片")!=-1){
+				continue;
+			}
+			List<String> canRefineLinks = LinkMatcher.getLink(allRefineText, "合成");
+			for (String canRefineLink: canRefineLinks){
+				canRefineLinks = LinkMatcher.getLinkFromUrl(canRefineLink, mainPageUrl, "合成");
+			}
+			mainPageText = LinkMatcher.getLinkText(mainPageUrl, null);
+			if (LinkMatcher.getLink(mainPageText, "偷炉").size()==0){
+				return;
+			}
+			List<Map> refineInfo = parseRefineInfo(LinkMatcher.getLinkText(this.getStealCardUrl(putCardids[i], fuin), mainPageUrl));
+			do{
+				Collections.sort(refineInfo, new Comparator<Map>() {
+					@Override
+					public int compare(Map lhs, Map rhs) {
+						int numl = Integer.parseInt(lhs.get("hasNum").toString());
+						int numr = Integer.parseInt(rhs.get("hasNum").toString());
+						if (numl>numr){
+							return 1;
+						}else if (numl<numr){
+							return -1;
+						}
+						return 0;
+					}
+				});
+				LinkMatcher.getLinkText(refineInfo.get(0).get("linkUrl").toString(), this.getAllRefineUrl(putCardids[i]));
+				int hasNum = Integer.parseInt(refineInfo.get(0).get("hasNum").toString());
+				refineInfo.get(0).put("hasNum",++hasNum);
+				mainPageText = LinkMatcher.getLinkText(mainPageUrl, null);
+			}while(LinkMatcher.getLink(mainPageText, "偷炉").size()!=0);
+		}
 	}
 
 	private void putCard(String mainPageUrl) {
@@ -147,9 +212,8 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 	}
 
 	private String[] getPutCardIds() {
-		String[] themeids = new String[1];
-		themeids[0] = "52";
-		return themeids;
+		String semltCard = this.getPrefer("smeltCard");
+		return semltCard.split(",");
 	}
 
 	private void refreshAllCardInfo() {
@@ -288,20 +352,22 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 	}
 
 	private void pickCard(String urlstr){
-		List<String> pickUrls = LinkMatcher.getLinkFromUrl(urlstr,null, "取卡");
+		List<String> pickUrls;
+		String pickResultText = "";
 		do{
+			pickUrls = LinkMatcher.getLinkFromUrl(urlstr,null, "取卡");
 			while(pickUrls!=null && pickUrls.size()!=0){
-				pickUrls = LinkMatcher.getLinkFromUrl(pickUrls.get(0), urlstr, "取卡");
+				pickResultText = LinkMatcher.getLinkText(pickUrls.get(0), urlstr);
+				if (LinkMatcher.isHasText(pickResultText, "您的卡片箱满了")){
+					break;
+				}
+				pickUrls = LinkMatcher.getLink(pickResultText, "取卡");
 			}
 			List<String> putSuitCard = LinkMatcher.getLinkFromUrl(urlstr,null, "买齐素材卡并放入集卡册");
 			while(putSuitCard!=null && putSuitCard.size()!=0){
 				putSuitCard = LinkMatcher.getLinkFromUrl(putSuitCard.get(0),null, "买齐素材卡并放入集卡册");
 			}
-			pickUrls = LinkMatcher.getLinkFromUrl(urlstr,null, "取卡");
-			if (pickUrls!=null && pickUrls.size()!=0 && LinkMatcher.isLinkHasText(putSuitCard.get(0), null, "您的卡片箱满了")){
-				break;
-			}
-		}while (pickUrls!=null && pickUrls.size()!=0);
+		}while (pickUrls!=null && pickUrls.size()!=0 && !LinkMatcher.isHasText(pickResultText, "您的卡片箱满了"));
 	}
 
 }

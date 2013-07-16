@@ -69,7 +69,7 @@ public class LinkMatcher {
 	}
 	
 	public static boolean isHasText(String httpText, String matchText){
-		return httpText.matches(matchText);
+		return httpText.indexOf(matchText)!=-1;
 	}
 	
 	public static boolean isLinkHasText(String urlstr, String referUrl, String matchText){

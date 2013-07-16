@@ -15,12 +15,12 @@ public class QQHelperWorkerService extends Service {
 		qchw.execute("dailyWork");
 		QQCardHelperWorker qchw1 = new QQCardHelperWorker("AdIgWDifiRcX8tASMSKYVb1Z", QQHelperWorkerService.this);
 		qchw1.execute("dailyWork");
-		QQCardHelperWorker qchw2 = new QQCardHelperWorker("ARgcN0nyTguSGHnYO2ZcJ0hc", QQHelperWorkerService.this);
-		qchw2.execute("dailyWork");
+//		QQCardHelperWorker qchw2 = new QQCardHelperWorker("ARgcN0nyTguSGHnYO2ZcJ0hc", QQHelperWorkerService.this);
+//		qchw2.execute("dailyWork");
 		QQCardHelperWorker qchw3 = new QQCardHelperWorker("ARXRV85sJGOw5eCjMthxuIta", QQHelperWorkerService.this);
 		qchw3.execute("dailyWork");
-		QQCardHelperWorker qchw4 = new QQCardHelperWorker("Af_WGcIROJ71bPEuK0x3XA1a", QQHelperWorkerService.this);
-		qchw4.execute("dailyWork");
+//		QQCardHelperWorker qchw4 = new QQCardHelperWorker("Af_WGcIROJ71bPEuK0x3XA1a", QQHelperWorkerService.this);
+//		qchw4.execute("dailyWork");
 		return super.onStartCommand(intent, flags, startId);
 	}
 
