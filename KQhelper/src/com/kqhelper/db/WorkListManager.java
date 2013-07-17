@@ -18,6 +18,10 @@ public class WorkListManager {
 		return dbManager.query("select * from CO_WorkList");
 	}
 	
+	public List<Map> getAllValidWorkList(){
+		return dbManager.query("select wl.*, wt.cName cWorkTypeName from CO_WorkList wl join CO_WorkType wt on wt.cTypeid=wl.cWorkType where iStatus=1");
+	}
+	
 	public List<Map> getWorkListByIds(String... ids){
 		StringBuffer sql = new StringBuffer("select * from CO_WorkList where 1=1 cWorkid in (");
 		for (int i=0;i<ids.length;i++){

@@ -72,10 +72,6 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 		return wm.getWorkPrefer("1", sid, cName);
 	}
 	
-	private String getWorkLineName(){
-		return wm.getWorkList("1", sid).get("cName")==null?"":wm.getWorkList("1", sid).get("cName").toString();
-	}
-	
 	@Override
 	protected void onProgressUpdate(String... values) {
 		super.onProgressUpdate(values);
@@ -97,7 +93,8 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 			refreshAllCardInfo();
 		}
 		Intent intent = new Intent("com.kqhelper.message");
-		intent.putExtra("message", getWorkLineName()+"Íê³É");
+		intent.putExtra("messageType", "QQCard");
+		intent.putExtra("message", sid);
 		context.sendBroadcast(intent);
 		return null;
 	}
