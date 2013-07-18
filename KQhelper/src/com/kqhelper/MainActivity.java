@@ -17,6 +17,8 @@ import android.os.IBinder;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -93,8 +95,20 @@ public class MainActivity extends Activity {
 	private void initListView() {
 		ListView workList = (ListView)findViewById(R.id.workList);
 		this.workList = getWorkList();
-		SimpleAdapter sa = new SimpleAdapter(this, this.workList, R.layout.vlist, new String[]{"cWorkTypeName","cName","iStatus"}, new int[]{R.id.cWorkTypeName,R.id.cName,R.id.iStatus});
+		SimpleAdapter sa = new SimpleAdapter(this, this.workList, R.layout.vlist, new String[]{"cWorkTypeName","cName","iStatus","cWorkid"}, new int[]{R.id.cWorkTypeName,R.id.cName,R.id.iStatus,R.id.cWorkid});
 		workList.setAdapter(sa);
+		workList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> listview, View v, int position,
+					long id) {
+				ListView workList = (ListView)listview;
+				Map<String,Object> pos = (Map<String,Object>)workList.getItemAtPosition(position);
+				Intent intent = new Intent();
+				intent.setClass(MainActivity.this, QQCardEditActivity.class);
+				intent.putExtra("cWorkid", pos.get("cWorkid").toString());
+				startActivity(intent);
+			}
+		});
 	}
 	
 	private void refreshListViewData(){
