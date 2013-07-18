@@ -23,11 +23,12 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.kqhelper.db.WorkListManager;
-import com.kqhepler.R;
 
 public class MainActivity extends Activity {
 	
 	private List<? extends Map<String, Object>> workList;
+	
+	private ServiceMessageReceiver receiver;
 
 	private ServiceConnection sc = new ServiceConnection() {
 		
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onDestroy() {
-		unbindService(sc);
+		unregisterReceiver(receiver);
 		stopService(new Intent(MainActivity.this, QQHelperWorkerService.class));
 		super.onDestroy();
 	}
@@ -74,7 +75,7 @@ public class MainActivity extends Activity {
 
 	private void refreshListViewForBegin() {
 		for (Map<String, Object> map: workList){
-			if ("".equals(map.get("iStatus").toString())){
+			if (!"禁用".equals(map.get("iStatus").toString())){
 				map.put("iStatus", "工作中....");
 			}
 		}
@@ -84,7 +85,8 @@ public class MainActivity extends Activity {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.setPriority(1000);
 		intentFilter.addAction("com.kqhelper.message");
-		registerReceiver(new ServiceMessageReceiver(), intentFilter);
+		receiver = new ServiceMessageReceiver();
+		registerReceiver(receiver, intentFilter);
 	}
 
 

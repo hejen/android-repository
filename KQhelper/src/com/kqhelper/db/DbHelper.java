@@ -24,20 +24,20 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL("insert into CO_WorkType(cTypeid,cName) values(?,?)", new String[]{"1","Ä§·¨¿¨Æ¬"});
 		//²âÊÔÊý¾Ý
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"1","1","AYASVZlbvJNzrPaLoUB6bKpb","3448","1"});
-		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"2","1","AdIgWDifiRcX8tASMSKYVb1Z","860","1"});
-		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"3","1","ARgcN0nyTguSGHnYO2ZcJ0hc","680","1"});
+		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"2","1","AdIgWDifiRcX8tASMSKYVb1Z","680","1"});
+		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"3","1","ARgcN0nyTguSGHnYO2ZcJ0hc","860","1"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"4","1","ARXRV85sJGOw5eCjMthxuIta","620","1"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"5","1","Af_WGcIROJ71bPEuK0x3XA1a","682","1"});
 		
 		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"1","1","smeltCard","52"});
-		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"2","2","smeltCard","0"});
-		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"3","3","smeltCard","52"});
+		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"2","2","smeltCard","52"});
+		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"3","3","smeltCard","0"});
 		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"4","4","smeltCard","52"});
 		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"5","5","smeltCard","45"});
 		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"6","1","isSteal","1"});
-		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"7","2","isSteal","0"});
+		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"7","2","isSteal","1"});
 		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"8","3","isSteal","0"});
-		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"9","4","isSteal","1"});
+		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"9","4","isSteal","0"});
 		db.execSQL("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", new String[]{"10","5","isSteal","1"});
 	}
 
