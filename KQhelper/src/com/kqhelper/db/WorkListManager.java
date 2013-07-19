@@ -23,12 +23,25 @@ public class WorkListManager {
 	}
 	
 	public List<Map> getWorkListByIds(String... ids){
-		StringBuffer sql = new StringBuffer("select * from CO_WorkList where 1=1 cWorkid in (");
+		StringBuffer sql = new StringBuffer("select wl.*,wt.cName cWorkTypeName from CO_WorkList wl join CO_WorkType wt on wt.cTypeid=wl.cWorkType where wl.cWorkid in (");
 		for (int i=0;i<ids.length;i++){
 			sql.append("?,");
 		}
 		sql.deleteCharAt(sql.length()-1).append(")");
 		return dbManager.query(sql.toString(), ids);
+	}
+	
+	public List<Map> getAllWorkType(){
+		return dbManager.query("select * from CO_WorkType");
+	}
+	
+	public void saveQQCard(Map qqcard){
+		String workTypeid = dbManager.queryForString("select cTypeid from CO_WorkType where cName=?", qqcard.get("cWorkTypeName").toString());
+		if (qqcard.get("cWorkid")==null || qqcard.get("cWorkid").toString().equals("")){
+			dbManager.update("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", String.valueOf(System.nanoTime()), workTypeid, qqcard.get("sid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString());
+		}else{
+			dbManager.update("update CO_WorkList set cWorkType=?,csid=?,cName=?,iStatus=? where cWorkid=?", workTypeid, qqcard.get("csid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString(), qqcard.get("cWorkid").toString());
+		}
 	}
 	
 	public Map getWorkList(String type, String sid){

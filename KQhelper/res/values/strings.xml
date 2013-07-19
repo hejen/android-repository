@@ -3,7 +3,16 @@
 
     <string name="app_name">QQ应用小助手</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="startWork">开始工作</string>
+    <string name="v_name">名称</string>
+    <string name="v_sid">sid</string>
+    <string name="str_valid">启 用</string>
+    <string name="str_invalid">禁 用</string>
+    <string name="str_apptype">应用类型</string>
+    <string name="str_save">保存</string>
+    <string name="str_cancel">取消</string>
+    <string name="str_error_noname">请填写名称</string>
+    <string name="str_error_nosid">请填写sid</string>
+    <string name="str_succ_save">保存成功</string>
 
 </resources>

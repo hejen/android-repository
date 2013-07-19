@@ -2,6 +2,7 @@ package com.kqhelper.db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,5 +58,19 @@ public class DbManager {
 	
 	public void close(){
 		db.close();
+	}
+	
+	public String queryForString(String sql, String... selectionArgs){
+		List<Map> listResult = query(sql, selectionArgs);
+		if (listResult==null || listResult.size()==0){
+			return "";
+		}
+		for (Map map: listResult){
+			for (Iterator iter=map.entrySet().iterator();iter.hasNext();){
+				Map.Entry entry = (Map.Entry)iter.next();
+				return entry.getValue().toString();
+			}
+		}
+		return "";
 	}
 }

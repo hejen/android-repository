@@ -2,24 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    >
-
-    <EditText
-        android:id="@+id/edit_name"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+    
+    <TextView
+        android:id="@+id/edit_v_workid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="26dp"
-        android:layout_marginTop="101dp"
-        android:ems="10" >
+        android:visibility="invisible" />
 
-        <requestFocus />
-    </EditText>
+    <TextView
+        android:id="@+id/edit_v_sid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_status"
+        android:layout_alignLeft="@+id/edit_v_name"
+        android:text="@string/v_sid" />
 
     <EditText
         android:id="@+id/edit_sid"
@@ -27,16 +28,66 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/edit_name"
         android:layout_below="@+id/edit_name"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="23dp"
         android:ems="10" />
+
+    <Spinner
+        android:id="@+id/edit_sp_worktype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/edit_v_apptype" />
+
+    <TextView
+        android:id="@+id/edit_v_apptype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/edit_sp_worktype"
+        android:layout_marginTop="14dp"
+        android:text="@string/str_apptype" />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_sp_worktype"
+        android:layout_centerHorizontal="true"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/edit_v_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edit_sid"
+        android:layout_alignLeft="@+id/edit_v_apptype"
+        android:text="@string/v_name" />
 
     <Switch
         android:id="@+id/edit_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edit_sid"
         android:layout_below="@+id/edit_sid"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp"
+        android:layout_marginTop="56dp"
         android:text="Switch" />
+
+    <Button
+        android:id="@+id/edit_btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/edit_btn_save"
+        android:layout_alignBottom="@+id/edit_btn_save"
+        android:layout_alignRight="@+id/edit_sid"
+        android:layout_marginRight="25dp"
+        android:text="@string/str_cancel" />
+
+    <Button
+        android:id="@+id/edit_btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edit_sp_worktype"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="62dp"
+        android:text="@string/str_save" />
 
 </RelativeLayout>

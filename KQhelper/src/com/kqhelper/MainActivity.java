@@ -28,6 +28,17 @@ import com.kqhelper.db.WorkListManager;
 
 public class MainActivity extends Activity {
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode==1){
+			if ("succ".equals(data.getStringExtra("msg"))){
+				this.workList = getWorkList();
+				this.refreshListViewData();
+			}
+		}
+	}
+
 	private List<? extends Map<String, Object>> workList;
 	
 	private ServiceMessageReceiver receiver;
@@ -105,8 +116,9 @@ public class MainActivity extends Activity {
 				Map<String,Object> pos = (Map<String,Object>)workList.getItemAtPosition(position);
 				Intent intent = new Intent();
 				intent.setClass(MainActivity.this, QQCardEditActivity.class);
+				intent.putExtra("action", "edit");
 				intent.putExtra("cWorkid", pos.get("cWorkid").toString());
-				startActivity(intent);
+				startActivityForResult(intent, 1);
 			}
 		});
 	}
