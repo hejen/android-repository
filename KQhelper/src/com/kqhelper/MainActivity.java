@@ -33,8 +33,7 @@ public class MainActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode==1){
 			if ("succ".equals(data.getStringExtra("msg"))){
-				this.workList = getWorkList();
-				this.refreshListViewData();
+				this.initListView();
 			}
 		}
 	}
@@ -132,7 +131,7 @@ public class MainActivity extends Activity {
 
 	private List<? extends Map<String, Object>> getWorkList() {
 		WorkListManager wlm = new WorkListManager(this);
-		List<Map> workList = (List<Map>)wlm.getAllValidWorkList();
+		List<Map> workList = (List<Map>)wlm.getAllWorkList();
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		 
