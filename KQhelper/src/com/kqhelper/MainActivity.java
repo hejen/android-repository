@@ -6,17 +6,23 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -41,6 +47,8 @@ public class MainActivity extends Activity {
 	private List<? extends Map<String, Object>> workList;
 	
 	private ServiceMessageReceiver receiver;
+	
+	private String selWorkid;
 
 	private ServiceConnection sc = new ServiceConnection() {
 		
@@ -120,6 +128,14 @@ public class MainActivity extends Activity {
 				startActivityForResult(intent, 1);
 			}
 		});
+		workList.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,
+					ContextMenuInfo info) {
+				getMenuInflater().inflate(R.menu.worklist_context_menu, menu);
+			}
+			
+		});
 	}
 	
 	private void refreshListViewData(){
@@ -147,6 +163,50 @@ public class MainActivity extends Activity {
         return list;
 	}
 
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()){
+			case R.id.main_action_add:addTask();break;
+		}
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	private void delTask(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		ListView workList = (ListView)findViewById(R.id.workList);
+		Map<String,Object> pos = (Map<String,Object>)workList.getItemAtPosition(menuInfo.position);
+		this.selWorkid = pos.get("cWorkid").toString();
+		new AlertDialog.Builder(this).setMessage(R.string.str_confirm_del).setPositiveButton(R.string.str_ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				WorkListManager wlm = new WorkListManager(MainActivity.this);
+				wlm.delWorkLine(selWorkid);
+				initListView();
+			}
+		})
+		.setNegativeButton(R.string.str_cancel, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		}).show();
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+			case R.id.wl_context_action_add:addTask();break;
+			case R.id.wl_context_action_del:delTask(item);break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	private void addTask() {
+		Intent intent = new Intent();
+		intent.setClass(MainActivity.this, QQCardEditActivity.class);
+		startActivityForResult(intent, 1);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

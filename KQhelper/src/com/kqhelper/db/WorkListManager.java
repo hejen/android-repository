@@ -38,7 +38,7 @@ public class WorkListManager {
 	public void saveQQCard(Map qqcard){
 		String workTypeid = dbManager.queryForString("select cTypeid from CO_WorkType where cName=?", qqcard.get("cWorkTypeName").toString());
 		if (qqcard.get("cWorkid")==null || qqcard.get("cWorkid").toString().equals("")){
-			dbManager.update("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", String.valueOf(System.nanoTime()), workTypeid, qqcard.get("sid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString());
+			dbManager.update("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", String.valueOf(System.nanoTime()), workTypeid, qqcard.get("csid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString());
 		}else{
 			dbManager.update("update CO_WorkList set cWorkType=?,csid=?,cName=?,iStatus=? where cWorkid=?", workTypeid, qqcard.get("csid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString(), qqcard.get("cWorkid").toString());
 		}
@@ -58,5 +58,10 @@ public class WorkListManager {
 			return null;
 		}
 		return preferLine.get(0).get("cValue")==null?null:preferLine.get(0).get("cValue").toString();
+	}
+	
+	public void delWorkLine(String workid){
+		dbManager.update("delete from CO_WorkList where cWorkid=?", workid);
+		dbManager.update("delete from CO_WorkPref where cWorkid=?", workid);
 	}
 }

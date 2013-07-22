@@ -3,6 +3,7 @@
 
     <string name="app_name">QQ应用小助手</string>
     <string name="action_settings">添加</string>
+    <string name="action_del">删除</string>
     <string name="startWork">开始工作</string>
     <string name="v_name">名称</string>
     <string name="v_sid">sid</string>
@@ -11,8 +12,10 @@
     <string name="str_apptype">应用类型</string>
     <string name="str_save">保存</string>
     <string name="str_cancel">取消</string>
+    <string name="str_ok">确定</string>
     <string name="str_error_noname">请填写名称</string>
     <string name="str_error_nosid">请填写sid</string>
     <string name="str_succ_save">保存成功</string>
+    <string name="str_confirm_del">是否删除该项?</string>
 
 </resources>
