@@ -5,6 +5,7 @@
     <string name="action_settings">添加</string>
     <string name="action_del">删除</string>
     <string name="startWork">开始工作</string>
+    <string name="stopWork">停止工作</string>
     <string name="v_name">名称</string>
     <string name="v_sid">sid</string>
     <string name="str_valid">启 用</string>

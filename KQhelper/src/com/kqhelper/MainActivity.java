@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,6 +18,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -49,6 +52,8 @@ public class MainActivity extends Activity {
 	private ServiceMessageReceiver receiver;
 	
 	private String selWorkid;
+	
+	private boolean isWork=false; 
 
 	private ServiceConnection sc = new ServiceConnection() {
 		
@@ -82,14 +87,22 @@ public class MainActivity extends Activity {
 		btnStartWork.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, QQHelperWorkerService.class);
-				startService(intent);
-				bindService(intent, sc, BIND_AUTO_CREATE);
-				refreshListViewForBegin();
-				refreshListViewData();
-				Toast.makeText(MainActivity.this, "开始工作....", Toast.LENGTH_LONG).show();
+				if (!isWork){
+					Intent intent = new Intent("com.kqhelper.startWork");
+					PendingIntent pi = PendingIntent.getBroadcast(MainActivity.this, 1, intent, 1);
+					AlarmManager am=(AlarmManager)getSystemService(ALARM_SERVICE);
+					am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 1000*60*30, pi);
+					isWork = true;
+				}else{
+					Intent intent = new Intent("com.kqhelper.startWork");
+					PendingIntent pi = PendingIntent.getBroadcast(MainActivity.this, 1, intent, 1);
+					AlarmManager am=(AlarmManager)getSystemService(ALARM_SERVICE);
+					am.cancel(pi);//intent要和启动时一样，否则无法停止
+					Button btn = (Button)findViewById(R.id.startWork);
+					btn.setText(R.string.startWork);
+					isWork = false;
+				}
 			}
-
 		});
 	}
 
@@ -105,6 +118,7 @@ public class MainActivity extends Activity {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.setPriority(1000);
 		intentFilter.addAction("com.kqhelper.message");
+		intentFilter.addAction("com.kqhelper.startWork");
 		receiver = new ServiceMessageReceiver();
 		registerReceiver(receiver, intentFilter);
 	}
@@ -218,7 +232,9 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if ("QQCard".equalsIgnoreCase(intent.getStringExtra("messageType"))){
+			if ("com.kqhelper.startWork".equals(intent.getAction())){
+				startWork();
+			}else if ("QQCard".equalsIgnoreCase(intent.getStringExtra("messageType"))){
 				qqcardReceive(context, intent);
 			}
 		}
@@ -233,6 +249,18 @@ public class MainActivity extends Activity {
 			refreshListViewData();
 		}
 		
+	}
+
+	public void startWork() {
+		Intent intent = new Intent();
+		intent.setClass(MainActivity.this, QQHelperWorkerService.class);
+		startService(intent);
+		bindService(intent, sc, BIND_AUTO_CREATE);
+		Button btn = (Button)findViewById(R.id.startWork);
+		btn.setText(R.string.stopWork);
+		refreshListViewForBegin();
+		refreshListViewData();
+		Toast.makeText(MainActivity.this, "开始工作....", Toast.LENGTH_LONG).show();
 	}
 
 }
