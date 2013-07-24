@@ -20,7 +20,7 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 
 	private String sid;
 	
-	private final int cardLevel = 1;
+	private final int cardLevel = 5;
 	
 	private Context context;
 	
@@ -89,13 +89,16 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 			if ("1".equals(getPrefer("isSteal"))){
 				stealCard(this.getMainPageUrl());
 			}
+			Intent intent = new Intent("com.kqhelper.message");
+			intent.putExtra("messageType", "QQCard");
+			intent.putExtra("message", sid);
+			context.sendBroadcast(intent);
 		}else if ("refreshCardInfo".equalsIgnoreCase(action)){
 			refreshAllCardInfo();
+			Intent intent = new Intent("com.kqhelper.message");
+			intent.putExtra("messageType", "qqcard.refresh");
+			context.sendBroadcast(intent);
 		}
-		Intent intent = new Intent("com.kqhelper.message");
-		intent.putExtra("messageType", "QQCard");
-		intent.putExtra("message", sid);
-		context.sendBroadcast(intent);
 		return null;
 	}
 	

@@ -254,6 +254,7 @@ public class MainActivity extends Activity {
 	public void startWork() {
 		Intent intent = new Intent();
 		intent.setClass(MainActivity.this, QQHelperWorkerService.class);
+		intent.putExtra("action", "qqcard.dailyWork");
 		startService(intent);
 		bindService(intent, sc, BIND_AUTO_CREATE);
 		Button btn = (Button)findViewById(R.id.startWork);

@@ -36,11 +36,10 @@ public class WorkListManager {
 	}
 	
 	public void saveQQCard(Map qqcard){
-		String workTypeid = dbManager.queryForString("select cTypeid from CO_WorkType where cName=?", qqcard.get("cWorkTypeName").toString());
 		if (qqcard.get("cWorkid")==null || qqcard.get("cWorkid").toString().equals("")){
-			dbManager.update("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", String.valueOf(System.nanoTime()), workTypeid, qqcard.get("csid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString());
+			dbManager.update("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", String.valueOf(System.nanoTime()), qqcard.get("cWorkType").toString(), qqcard.get("csid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString());
 		}else{
-			dbManager.update("update CO_WorkList set cWorkType=?,csid=?,cName=?,iStatus=? where cWorkid=?", workTypeid, qqcard.get("csid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString(), qqcard.get("cWorkid").toString());
+			dbManager.update("update CO_WorkList set cWorkType=?,csid=?,cName=?,iStatus=? where cWorkid=?", qqcard.get("cWorkType").toString(), qqcard.get("csid").toString(), qqcard.get("cName").toString(), qqcard.get("iStatus").toString(), qqcard.get("cWorkid").toString());
 		}
 	}
 	
@@ -60,8 +59,26 @@ public class WorkListManager {
 		return preferLine.get(0).get("cValue")==null?null:preferLine.get(0).get("cValue").toString();
 	}
 	
+	public void setWorkPrefer(String workType, String sid, String prefName, String prefValue){
+		String oldPrefer = getWorkPrefer(workType, sid, prefName);
+		Map workline = this.getWorkList(workType, sid);
+		if (oldPrefer==null || "".equals(oldPrefer)){
+			dbManager.update("insert into CO_WorkPref(cGUID,cWorkid,cName,cValue) values(?,?,?,?)", String.valueOf(System.nanoTime()),workline.get("cWorkid").toString(),prefName,prefValue);
+		}else{
+			dbManager.update("update CO_WorkPref set cValue=? where cWorkid=? and cName=?", prefValue, workline.get("cWorkid").toString(), prefName);
+		}
+	}
+	
 	public void delWorkLine(String workid){
 		dbManager.update("delete from CO_WorkList where cWorkid=?", workid);
 		dbManager.update("delete from CO_WorkPref where cWorkid=?", workid);
+	}
+	
+	public List<Map> getAllCardSuit(){
+		return dbManager.query("select * from CO_CardSuit");
+	}
+	
+	public Map getCardSuit(String cThemeid){
+		return dbManager.queryForMap("select * from CO_CardSuit where cThemeid=?",cThemeid);
 	}
 }

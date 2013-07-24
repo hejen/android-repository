@@ -62,15 +62,6 @@
         android:layout_alignLeft="@+id/edit_v_apptype"
         android:text="@string/v_name" />
 
-    <Switch
-        android:id="@+id/edit_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/edit_sid"
-        android:layout_below="@+id/edit_sid"
-        android:layout_marginTop="56dp"
-        android:text="Switch" />
-
     <Button
         android:id="@+id/edit_btn_cancel"
         android:layout_width="wrap_content"
@@ -81,13 +72,57 @@
         android:layout_marginRight="25dp"
         android:text="@string/str_cancel" />
 
+    <Switch
+        android:id="@+id/edit_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edit_v_sid"
+        android:layout_below="@+id/edit_sid"
+        android:layout_marginTop="24dp"
+        android:text="Switch" />
+
     <Button
         android:id="@+id/edit_btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/edit_sp_worktype"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="62dp"
+        android:layout_toRightOf="@+id/edit_v_apptype"
         android:text="@string/str_save" />
+
+    <Switch
+        android:id="@+id/edit_steal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edit_status"
+        android:layout_below="@+id/edit_status"
+        android:layout_marginTop="26dp"
+        android:text="@string/str_streal" />
+
+    <Button
+        android:id="@+id/edit_btn_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/edit_tv_auto"
+        android:layout_alignBottom="@+id/edit_tv_auto"
+        android:layout_alignParentRight="true"
+        android:text="@string/str_refresh_cardInfo" />
+
+    <Spinner
+        android:id="@+id/edit_sp_cardsuits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_steal"
+        android:layout_marginTop="25dp"
+        android:layout_toLeftOf="@+id/edit_btn_refresh"
+        android:layout_toRightOf="@+id/edit_tv_auto" />
+
+    <TextView
+        android:id="@+id/edit_tv_auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/edit_sp_cardsuits"
+        android:layout_marginBottom="14dp"
+        android:layout_toLeftOf="@+id/edit_btn_save"
+        android:text="@string/str_auto_put_card" />
 
 </RelativeLayout>

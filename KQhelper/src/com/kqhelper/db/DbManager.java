@@ -47,6 +47,14 @@ public class DbManager {
 		return result;
 	}
 	
+	public Map queryForMap(String sql, String... selectionArgs){
+		List<Map> result = this.query(sql, selectionArgs);
+		if (result==null || result.size()==0){
+			return new HashMap();
+		}
+		return result.get(0);
+	}
+	
 	public void batchUpdate(String sql, List<String[]> params){
 		db.beginTransaction();
 		for (String[] param: params){
