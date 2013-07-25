@@ -20,6 +20,7 @@
     <string name="str_error_nosid">请填写sid</string>
     <string name="str_succ_save">保存成功</string>
     <string name="str_streal">偷 炉</string>
+    <string name="str_sel_type">请选择应用类型</string>
     <string name="str_confirm_del">是否删除该项?</string>
     <string name="str_alert_refresh_card">刷新卡片耗时较长，请耐心等待……</string>
     <string name="str_alert_no_cardInfo">没有卡片信息，请点击刷新卡片获取</string>

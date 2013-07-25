@@ -53,7 +53,9 @@ public class MainActivity extends Activity {
 	
 	private String selWorkid;
 	
-	private boolean isWork=false; 
+	private boolean isWork=false;
+	
+	private List<Map> workTypes;
 
 	private ServiceConnection sc = new ServiceConnection() {
 		
@@ -82,6 +84,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		initListView();
 		initReceiver();
+		initVar();
 		
 		Button btnStartWork = (Button)findViewById(R.id.startWork);
 		btnStartWork.setOnClickListener(new OnClickListener() {
@@ -104,6 +107,11 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+	}
+
+	private void initVar() {
+		WorkListManager wlm = new WorkListManager(this);
+		workTypes = wlm.getAllWorkType();
 	}
 
 	private void refreshListViewForBegin() {
@@ -136,7 +144,7 @@ public class MainActivity extends Activity {
 				ListView workList = (ListView)listview;
 				Map<String,Object> pos = (Map<String,Object>)workList.getItemAtPosition(position);
 				Intent intent = new Intent();
-				intent.setClass(MainActivity.this, QQCardEditActivity.class);
+				intent.setClass(MainActivity.this, findClassName(pos.get("cWorkTypeName").toString()));
 				intent.putExtra("action", "edit");
 				intent.putExtra("cWorkid", pos.get("cWorkid").toString());
 				startActivityForResult(intent, 1);
@@ -152,6 +160,20 @@ public class MainActivity extends Activity {
 		});
 	}
 	
+	protected Class<?> findClassName(String workTypeName) {
+		for (Map workType: workTypes){
+			if (workType.get("cName").toString().equals(workTypeName)){
+				try {
+					return Class.forName(workType.get("cEditClassName").toString());
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return QQCardEditActivity.class;
+	}
+
+
 	private void refreshListViewData(){
 		ListView workList = (ListView)findViewById(R.id.workList);
 		SimpleAdapter sa = (SimpleAdapter)workList.getAdapter();
@@ -217,9 +239,25 @@ public class MainActivity extends Activity {
 	}
 
 	private void addTask() {
-		Intent intent = new Intent();
-		intent.setClass(MainActivity.this, QQCardEditActivity.class);
-		startActivityForResult(intent, 1);
+		String[] workList = new String[workTypes.size()];
+		for (int i=0;i<workTypes.size();i++){
+			workList[i] = workTypes.get(i).get("cName").toString();
+		}
+		new AlertDialog.Builder(this).setTitle(R.string.str_sel_type)
+		.setSingleChoiceItems(workList, 0, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Map workType = workTypes.get(which);
+				Intent intent = new Intent();
+				try {
+					intent.setClass(MainActivity.this, Class.forName(workType.get("cEditClassName").toString()));
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				startActivityForResult(intent, 1);
+				dialog.cancel();
+			}
+		}).show();
 	}
 
 	@Override

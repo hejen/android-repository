@@ -19,7 +19,7 @@ public class WorkListManager {
 	}
 	
 	public List<Map> getAllValidWorkList(){
-		return dbManager.query("select wl.*, wt.cName cWorkTypeName from CO_WorkList wl join CO_WorkType wt on wt.cTypeid=wl.cWorkType where iStatus=1");
+		return dbManager.query("select wl.*, wt.cName cWorkTypeName, wt.cWorkClassName from CO_WorkList wl join CO_WorkType wt on wt.cTypeid=wl.cWorkType where iStatus=1");
 	}
 	
 	public List<Map> getWorkListByIds(String... ids){

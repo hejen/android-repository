@@ -79,7 +79,7 @@
         android:layout_alignLeft="@+id/edit_v_sid"
         android:layout_below="@+id/edit_sid"
         android:layout_marginTop="24dp"
-        android:text="Switch" />
+        android:text="@string/str_invalid" />
 
     <Button
         android:id="@+id/edit_btn_save"

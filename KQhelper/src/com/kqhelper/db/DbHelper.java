@@ -18,10 +18,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE IF NOT EXISTS CO_CardSuit(cThemeid varchar primary key, iLevel integer, cName varchar)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS CO_CardInfo(cThemeid varchar, cCardID varchar, cName varchar, cSubs varchar, iPrice integer, iIsBottom integer)");
-		db.execSQL("CREATE TABLE IF NOT EXISTS CO_WorkType(cTypeid varchar primary key, cName varchar)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS CO_WorkType(cTypeid varchar primary key, cName varchar, cEditClassName varchar, cWorkClassName varchar)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS CO_WorkList(cWorkid varchar primary key, cWorkType varchar, csid varchar, cName varchar, iStatus integer)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS CO_WorkPref(cGUID varchar primary key, cWorkid varchar, cName varchar, cValue varchar)");
-		db.execSQL("insert into CO_WorkType(cTypeid,cName) values(?,?)", new String[]{"1","Ä§·¨¿¨Æ¬"});
+		db.execSQL("insert into CO_WorkType(cTypeid,cName,cEditClassName,cWorkClassName) values(?,?,?,?)", new String[]{"1","Ä§·¨¿¨Æ¬","com.kqhelper.QQCardEditActivity","com.kqhelper.QQCardHelperWorker"});
 		//²âÊÔÊý¾Ý
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"1","1","AYASVZlbvJNzrPaLoUB6bKpb","3448","1"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"2","1","AdIgWDifiRcX8tASMSKYVb1Z","680","1"});

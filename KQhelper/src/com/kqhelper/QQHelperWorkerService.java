@@ -3,11 +3,12 @@ package com.kqhelper;
 import java.util.List;
 import java.util.Map;
 
-import com.kqhelper.db.WorkListManager;
-
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
+
+import com.kqhelper.db.WorkListManager;
 
 public class QQHelperWorkerService extends Service {
 
@@ -20,8 +21,13 @@ public class QQHelperWorkerService extends Service {
 			WorkListManager wlm = new WorkListManager(this);
 			List<Map> workList = (List<Map>)wlm.getAllValidWorkList();
 			for (Map workLine: workList){
-				QQCardHelperWorker qchw = new QQCardHelperWorker(workLine.get("csid").toString(), QQHelperWorkerService.this);
-				qchw.execute("dailyWork");
+				if ("com.kqhelper.QQCardHelperWorker".equalsIgnoreCase(workLine.get("cWorkClassName").toString())){
+					QQCardHelperWorker qchw = new QQCardHelperWorker(workLine.get("csid").toString(), QQHelperWorkerService.this);
+					qchw.equals("dailyWork");
+				}else if ("com.kqhelper.QQFarmHelperWorker".equalsIgnoreCase(workLine.get("cWorkClassName").toString())){
+					QQFarmHelperWorker qfhw = new QQFarmHelperWorker(workLine.get("csid").toString(), QQHelperWorkerService.this);
+					qfhw.execute("dailyWork");
+				}
 			}
 		}else if ("qqcard.refreshCard".equals(intent.getStringExtra("action"))){
 			String csid = intent.getStringExtra("sid");
