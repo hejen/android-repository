@@ -29,30 +29,25 @@
         android:layout_alignLeft="@+id/edit_name"
         android:layout_below="@+id/edit_name"
         android:layout_marginTop="23dp"
-        android:ems="10" />
-
-    <Spinner
-        android:id="@+id/edit_sp_worktype"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/edit_v_apptype" />
+        android:ems="10" 
+        android:hint="@string/v_sid"/>
 
     <TextView
         android:id="@+id/edit_v_apptype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/edit_sp_worktype"
         android:layout_marginTop="14dp"
-        android:text="@string/str_apptype" />
+        android:text="@string/app_name_qqcard"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/edit_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edit_sp_worktype"
         android:layout_centerHorizontal="true"
-        android:ems="10" />
+        android:layout_below="@+id/edit_v_apptype"
+        android:ems="10" 
+        android:hint="@string/v_name"/>
 
     <TextView
         android:id="@+id/edit_v_name"

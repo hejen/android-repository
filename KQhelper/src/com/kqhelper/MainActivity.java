@@ -272,12 +272,12 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			if ("com.kqhelper.startWork".equals(intent.getAction())){
 				startWork();
-			}else if ("QQCard".equalsIgnoreCase(intent.getStringExtra("messageType"))){
-				qqcardReceive(context, intent);
+			}else if ("finish".equalsIgnoreCase(intent.getStringExtra("messageType"))){
+				doFinish(context, intent);
 			}
 		}
 
-		private void qqcardReceive(Context context, Intent intent) {
+		private void doFinish(Context context, Intent intent) {
 			String csid = intent.getStringExtra("message");
 			for (Map<String, Object> map: workList){
 				if (csid.equalsIgnoreCase(map.get("csid").toString())){

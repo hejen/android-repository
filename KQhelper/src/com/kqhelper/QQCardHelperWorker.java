@@ -11,25 +11,21 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 
 import com.kqhelper.db.DbManager;
 import com.kqhelper.db.WorkListManager;
 
-public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
+public class QQCardHelperWorker extends QQHelperWorker {
 
-	private String sid;
-	
 	private final int cardLevel = 5;
-	
-	private Context context;
-	
-	private WorkListManager wm;
 	
 	public QQCardHelperWorker(String sid, Context context){
 		this.sid = sid;
 		this.context = context;
 		this.wm = new WorkListManager(context);
+	}
+	
+	public QQCardHelperWorker(){
 	}
 	
 	private String getMainPageUrl(){
@@ -90,7 +86,7 @@ public class QQCardHelperWorker extends AsyncTask<String, String, Void> {
 				stealCard(this.getMainPageUrl());
 			}
 			Intent intent = new Intent("com.kqhelper.message");
-			intent.putExtra("messageType", "QQCard");
+			intent.putExtra("messageType", "finish");
 			intent.putExtra("message", sid);
 			context.sendBroadcast(intent);
 		}else if ("refreshCardInfo".equalsIgnoreCase(action)){

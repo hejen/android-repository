@@ -81,7 +81,7 @@ public class LinkMatcher {
 		try {
 			url = new URL(urlstr);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(5* 1000);//设置连接超时
+			conn.setConnectTimeout(30*1000);//设置连接超时
 			conn.setUseCaches(false);
 			conn.setRequestProperty("User-agent", "JUC (Linux; U; 2.3.7; zh-cn; MB200; 320*480) UCWEB7.9.3.103/139/999");
 			conn.setRequestMethod("GET");//以get方式发起请求

@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">QQ应用小助手</string>
+    <string name="app_name_qqcard">魔法卡片</string>
+    <string name="app_name_qqfarm">QQ农场</string>
     <string name="action_settings">添加</string>
     <string name="action_del">删除</string>
     <string name="startWork">开始工作</string>

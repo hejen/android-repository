@@ -37,7 +37,6 @@ public class QQCardEditActivity extends Activity {
 		wlm = new WorkListManager(this);
 		setContentView(R.layout.activity_qqcard_edit);
 		initBtn();
-		initSpinner();
 		initCardSuitList();
 		initReceiver();
 		Intent intent = getIntent();
@@ -93,8 +92,7 @@ public class QQCardEditActivity extends Activity {
 					return;
 				}
 				Map qqcard = new HashMap();
-				Spinner worktype = (Spinner)findViewById(R.id.edit_sp_worktype);
-				qqcard.put("cWorkType", ((SpinnerItem)worktype.getSelectedItem()).getId());
+				qqcard.put("cWorkType", "1");
 				qqcard.put("cName", getWidgetValue(R.id.edit_name));
 				qqcard.put("csid", getWidgetValue(R.id.edit_sid));
 				qqcard.put("cWorkid", getWidgetValue(R.id.edit_v_workid));
@@ -104,7 +102,9 @@ public class QQCardEditActivity extends Activity {
 				Switch swit_steal = (Switch)findViewById(R.id.edit_steal);
 				setPrefer(getWidgetValue(R.id.edit_sid), "isSteal", swit_steal.isChecked()?"1":"0");
 				Spinner cardsuit = (Spinner)findViewById(R.id.edit_sp_cardsuits);
-				setPrefer(getWidgetValue(R.id.edit_sid), "smeltCard", ((SpinnerItem)cardsuit.getSelectedItem()).getId());
+				if (cardsuit.getSelectedItem()!=null){
+					setPrefer(getWidgetValue(R.id.edit_sid), "smeltCard", ((SpinnerItem)cardsuit.getSelectedItem()).getId());
+				}
 				Toast.makeText(QQCardEditActivity.this, R.string.str_succ_save, Toast.LENGTH_LONG).show();
 				Intent intent = new Intent();
 				intent.putExtra("msg", "succ");
@@ -137,16 +137,6 @@ public class QQCardEditActivity extends Activity {
 				v.setClickable(false);
 			}
 		});
-	}
-
-	private void initSpinner() {
-		Spinner worktype = (Spinner)findViewById(R.id.edit_sp_worktype);
-		ArrayAdapter<SpinnerItem> sa = new ArrayAdapter<SpinnerItem>(this,  android.R.layout.simple_spinner_item);
-		List<Map> workTypeList = wlm.getAllWorkType();
-		for (Map workTypeLine: workTypeList){
-			sa.add(new SpinnerItem(workTypeLine.get("cTypeid").toString(),workTypeLine.get("cName").toString()));
-		}
-		worktype.setAdapter(sa);
 	}
 
 	private void loadWorkLine(String workid) {
@@ -183,8 +173,6 @@ public class QQCardEditActivity extends Activity {
 		this.setWidgetValue(R.id.edit_name, workLine.get("cName").toString());
 		this.setWidgetValue(R.id.edit_sid, workLine.get("csid").toString());
 		this.setWidgetValue(R.id.edit_v_workid, workLine.get("cWorkid").toString());
-		Spinner worktype = (Spinner)findViewById(R.id.edit_sp_worktype);
-		setSpinner(worktype, workLine.get("cWorkTypeName").toString());
 		Spinner cardsuit = (Spinner)findViewById(R.id.edit_sp_cardsuits);
 		String putCardSuit = getPrefer("smeltCard",workLine.get("csid").toString());
 		Map cardSuit = wlm.getCardSuit(putCardSuit);
