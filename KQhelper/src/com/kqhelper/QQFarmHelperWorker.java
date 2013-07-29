@@ -52,12 +52,23 @@ public class QQFarmHelperWorker extends QQHelperWorker {
 	private void oneKeyDailyWork() {
 		String mainText = LinkMatcher.getLinkText(this.getMainPageUrl(),null);
 		this.oneKeyWork(mainText, "收获");
+		this.oneKeyWork(mainText, "铲除");
 		this.oneKeyWork(mainText, "除草");
 		this.oneKeyWork(mainText, "杀虫");
 		this.oneKeyWork(mainText, "浇水");
+		grow(mainText);
 //		this.oneKeyWork(mainText, "施肥");
 	}
 	
+	private void grow(String mainText) {
+		List<String> growUrl = LinkMatcher.getLink(mainText, "播种");
+		if (growUrl==null && growUrl.size()<=0){
+			return;
+		}
+		String growHttpText = LinkMatcher.getLinkText(growUrl.get(0), getMainPageUrl());
+		List<String> growPlantUrl = LinkMatcher.getLink(growHttpText, "种植");
+	}
+
 	private void oneKeyWork(String httpText, String linkName) {
 		List<String> fetchUrls = LinkMatcher.getLink(httpText, linkName);
 		if (fetchUrls!=null && fetchUrls.size()>0){

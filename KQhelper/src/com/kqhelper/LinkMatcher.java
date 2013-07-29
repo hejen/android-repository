@@ -25,6 +25,15 @@ public class LinkMatcher {
 		return result;
 	}
 	
+	public static String getFirstLink(String httpText, String linkName){
+		Pattern p = Pattern.compile("href=\"?([^\\s\">]*)\"?[^>]*>"+linkName);
+		Matcher m = p.matcher(httpText);
+		while(m.find()){
+			return m.group(1).replaceAll("&amp;", "&");
+		}
+		return null;
+	}
+	
 	public static int getMatchNum(String httpText, String matchStr){
 		Pattern p = Pattern.compile(matchStr);
 		Matcher m = p.matcher(httpText);
