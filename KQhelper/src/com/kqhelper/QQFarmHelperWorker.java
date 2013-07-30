@@ -62,7 +62,7 @@ public class QQFarmHelperWorker extends QQHelperWorker {
 	
 	private void grow(String mainText) {
 		List<String> growUrl = LinkMatcher.getLink(mainText, "≤•÷÷");
-		if (growUrl==null && growUrl.size()<=0){
+		if (growUrl==null || growUrl.size()<=0){
 			return;
 		}
 		String growHttpText = LinkMatcher.getLinkText(growUrl.get(0), getMainPageUrl());
