@@ -1,6 +1,11 @@
 package com.kqhelper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.Intent;
@@ -61,15 +66,81 @@ public class QQTowerHelperWorker extends QQHelperWorker {
 
 	private void inviteCustomer() {
 		String mainHttpText = LinkMatcher.getLinkText(mainPageUrl, null);
-		String inviteCust = getInviteCustomer(mainHttpText);
+		String shopshowUrl = LinkMatcher.getFirstLink(mainHttpText, "我的店铺");
+		String shopsHttpText = LinkMatcher.getLinkText(shopshowUrl, mainPageUrl);
+		List<String> shopsUrl = LinkMatcher.getLink(shopsHttpText, "进店");
+		for (String shopUrl: shopsUrl){
+			String shopHttpText = LinkMatcher.getLinkText(shopUrl, shopshowUrl);
+			int emptySeatNum = getEmptySeatNum(shopHttpText);
+			if (emptySeatNum==0){
+				continue;
+			}
+			String inviteCust = getInviteCustomer(shopHttpText);
+			if (inviteCust==null || inviteCust.equals("")){
+				continue;
+			}
+			while (emptySeatNum>0){
+				int emptyWaitingSeat = getEmptyWaitingSeat(LinkMatcher.getLinkText(shopUrl, shopshowUrl));
+				inviteBasketCustomers(emptyWaitingSeat);
+				List<Map> waitingCustomers = getWaitingCustomers(LinkMatcher.getLinkText(shopUrl, shopshowUrl));
+				if (waitingCustomers!=null && waitingCustomers.size()>0){
+					for (Map waitingCustomer: waitingCustomers){
+						if (!inviteCust.equals(waitingCustomer.get("name").toString())){
+							LinkMatcher.getLinkText(waitingCustomer.get("kickUrl").toString(), shopUrl);
+						}else{
+							LinkMatcher.getLinkText(waitingCustomer.get("serviceUrl").toString(), shopUrl);
+							emptySeatNum--;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void inviteBasketCustomers(int emptyWaitingSeat) {
+		// TODO Auto-generated method stub
+	}
+
+	private int getEmptyWaitingSeat(String linkText) {
+		//TODO
+		return 0;
+	}
+
+	private List<Map> getWaitingCustomers(String linkText) {
+		//TODO
+		return null;
+	}
+
+	private int getEmptySeatNum(String shopHttpText) {
+		//TODO
+		return 0;
 	}
 
 	private String getInviteCustomer(String mainHttpText) {
 		String basketFlowerHttpText = LinkMatcher.getLinkText(addLinkPrefix(LinkMatcher.getFirstLink(mainHttpText, "至尊花篮邀请")), null);
-		
+		List<Map> basketCustomers = getBasketCustomer(basketFlowerHttpText);
+		for (Map basketCustomer: basketCustomers){
+			if ("3".equals(basketCustomer.get("price").toString())){
+				return basketCustomer.get("name").toString();
+			}
+		}
 		return null;
 	}
 	
+	private List<Map> getBasketCustomer(String basketFlowerHttpText) {
+		Pattern p = Pattern.compile(">([^><]+?)(\\d)M[^>]+href=[\"']([^<>]+)[\"']>邀请");
+		Matcher m = p.matcher(basketFlowerHttpText);
+		List<Map> result = new ArrayList<Map>();
+		while(m.find()){
+			Map customer = new HashMap();
+			customer.put("name", m.group(1).trim());
+			customer.put("price", m.group(2).trim());
+			customer.put("url", m.group(3).trim());
+			result.add(customer);
+		}
+		return result;
+	}
+
 	private void getPrize(String mainHttpText) {
 		String anotherUrl = addLinkPrefix(LinkMatcher.getFirstLink(mainHttpText, "进入校友版再领取一次奖品"));
 		String friendText = LinkMatcher.getLinkText(anotherUrl, null);
