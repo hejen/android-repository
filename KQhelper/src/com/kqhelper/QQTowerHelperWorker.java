@@ -66,10 +66,11 @@ public class QQTowerHelperWorker extends QQHelperWorker {
 
 	private void inviteCustomer() {
 		String mainHttpText = LinkMatcher.getLinkText(mainPageUrl, null);
-		String shopshowUrl = LinkMatcher.getFirstLink(mainHttpText, "我的店铺");
+		String shopshowUrl = addLinkPrefix(LinkMatcher.getFirstLink(mainHttpText, "我的店铺"));
 		String shopsHttpText = LinkMatcher.getLinkText(shopshowUrl, mainPageUrl);
 		List<String> shopsUrl = LinkMatcher.getLink(shopsHttpText, "进店");
 		for (String shopUrl: shopsUrl){
+			shopUrl = addLinkPrefix(shopUrl);
 			String shopHttpText = LinkMatcher.getLinkText(shopUrl, shopshowUrl);
 			int emptySeatNum = getEmptySeatNum(shopHttpText);
 			if (emptySeatNum==0){
