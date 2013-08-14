@@ -44,6 +44,7 @@ public class QQFarmHelperWorker extends QQHelperWorker {
 			Intent intent = new Intent("com.kqhelper.message");
 			intent.putExtra("messageType", "finish");
 			intent.putExtra("message", sid);
+			intent.putExtra("messageWorkTypeName", "QQ农场");
 			context.sendBroadcast(intent);
 		}
 		return null;
@@ -65,7 +66,7 @@ public class QQFarmHelperWorker extends QQHelperWorker {
 		if (growUrl==null || growUrl.size()<=0){
 			return;
 		}
-		String growHttpText = LinkMatcher.getLinkText(growUrl.get(0), getMainPageUrl());
+		String growHttpText = LinkMatcher.getLinkText(addPrefix(growUrl.get(0)), getMainPageUrl());
 		List<String> growPlantUrl = LinkMatcher.getLink(growHttpText, "种植");
 	}
 
@@ -83,6 +84,13 @@ public class QQFarmHelperWorker extends QQHelperWorker {
 		while (fetchUrls!=null && fetchUrls.size()>0){
 			fetchUrls = LinkMatcher.getLinkFromUrl(fetchUrls.get(0), this.getMainPageUrl(), "领取奖励");
 		}
+	}
+	
+	private String addPrefix(String url){
+		if (url.startsWith("./")){
+			return url.replaceAll("\\./", "http://mcapp.z.qq.com/nc/cgi-bin/");
+		}
+		return url;
 	}
 
 }

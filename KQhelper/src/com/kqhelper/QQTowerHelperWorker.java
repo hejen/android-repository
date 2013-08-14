@@ -59,6 +59,7 @@ public class QQTowerHelperWorker extends QQHelperWorker {
 			Intent intent = new Intent("com.kqhelper.message");
 			intent.putExtra("messageType", "finish");
 			intent.putExtra("message", sid);
+			intent.putExtra("messageWorkTypeName", "QQ大楼");
 			context.sendBroadcast(intent);
 		}
 		return null;
@@ -113,8 +114,12 @@ public class QQTowerHelperWorker extends QQHelperWorker {
 	}
 
 	private int getEmptySeatNum(String shopHttpText) {
-		//TODO
-		return 0;
+		Matcher m = Pattern.compile("(?<=服务区.*)\\[座\\d+]\\s+空位").matcher(shopHttpText);
+		int result = 0;
+		while(m.find()){
+			result++;
+		}
+		return result;
 	}
 
 	private String getInviteCustomer(String mainHttpText) {
@@ -144,6 +149,9 @@ public class QQTowerHelperWorker extends QQHelperWorker {
 
 	private void getPrize(String mainHttpText) {
 		String anotherUrl = addLinkPrefix(LinkMatcher.getFirstLink(mainHttpText, "进入校友版再领取一次奖品"));
+		if (anotherUrl==null){
+			return ;
+		}
 		String friendText = LinkMatcher.getLinkText(anotherUrl, null);
 		String zoneUrl = addLinkPrefix(LinkMatcher.getFirstLink(friendText, "去空间领龙珠"));
 		LinkMatcher.getLinkText(zoneUrl, anotherUrl);

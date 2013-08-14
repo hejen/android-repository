@@ -88,6 +88,7 @@ public class QQCardHelperWorker extends QQHelperWorker {
 			Intent intent = new Intent("com.kqhelper.message");
 			intent.putExtra("messageType", "finish");
 			intent.putExtra("message", sid);
+			intent.putExtra("messageWorkTypeName", "Ä§·¨¿¨Æ¬");
 			context.sendBroadcast(intent);
 		}else if ("refreshCardInfo".equalsIgnoreCase(action)){
 			refreshAllCardInfo();

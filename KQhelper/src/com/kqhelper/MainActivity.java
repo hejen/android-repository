@@ -279,8 +279,9 @@ public class MainActivity extends Activity {
 
 		private void doFinish(Context context, Intent intent) {
 			String csid = intent.getStringExtra("message");
+			String cWorkTypeName = intent.getStringExtra("messageWorkTypeName");
 			for (Map<String, Object> map: workList){
-				if (csid.equalsIgnoreCase(map.get("csid").toString())){
+				if (csid.equalsIgnoreCase(map.get("csid").toString()) && cWorkTypeName.equalsIgnoreCase(map.get("cWorkTypeName").toString())){
 					map.put("iStatus", "Íê³É");
 				}
 			}
