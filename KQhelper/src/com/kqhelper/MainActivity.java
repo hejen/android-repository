@@ -96,6 +96,7 @@ public class MainActivity extends Activity {
 					AlarmManager am=(AlarmManager)getSystemService(ALARM_SERVICE);
 					am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 1000*60*30, pi);
 					isWork = true;
+					sendBroadcast(intent);
 				}else{
 					Intent intent = new Intent("com.kqhelper.startWork");
 					PendingIntent pi = PendingIntent.getBroadcast(MainActivity.this, 1, intent, 1);

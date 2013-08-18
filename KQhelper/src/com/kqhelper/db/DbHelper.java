@@ -25,11 +25,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL("insert into CO_WorkType(cTypeid,cName,cEditClassName,cWorkClassName) values(?,?,?,?)", new String[]{"2","QQ农场","com.kqhelper.QQFarmEditActivity","com.kqhelper.QQFarmHelperWorker"});
 		db.execSQL("insert into CO_WorkType(cTypeid,cName,cEditClassName,cWorkClassName) values(?,?,?,?)", new String[]{"3","QQ大楼","com.kqhelper.QQTowerEditActivity","com.kqhelper.QQTowerHelperWorker"});
 		//测试数据
-		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"1","1","AYASVZlbvJNzrPaLoUB6bKpb","3448","0"});
+		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"1","1","AYASVZlbvJNzrPaLoUB6bKpb","34468","0"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"2","1","AdIgWDifiRcX8tASMSKYVb1Z","680","0"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"3","1","ARgcN0nyTguSGHnYO2ZcJ0hc","860","0"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"4","1","ARXRV85sJGOw5eCjMthxuIta","620","0"});
-		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"5","1","Af_WGcIROJ71bPEuK0x3XA1a","682","0"});
+		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"5","1","Af_WGcIROJ71bPEuK0x3XA1a","34484","0"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"6","2","AYASVZlbvJNzrPaLoUB6bKpb","34484","1"});
 		db.execSQL("insert into CO_WorkList(cWorkid,cWorkType,csid,cName,iStatus) values(?,?,?,?,?)", new String[]{"7","3","AYASVZlbvJNzrPaLoUB6bKpb","34484","1"});
 		

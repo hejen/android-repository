@@ -114,7 +114,8 @@ public class QQTowerHelperWorker extends QQHelperWorker {
 	}
 
 	private int getEmptySeatNum(String shopHttpText) {
-		Matcher m = Pattern.compile("(?<=服务区.*)\\[座\\d+]\\s+空位").matcher(shopHttpText);
+		String afterSeriveArea = shopHttpText.substring(shopHttpText.indexOf("服务区"));
+		Matcher m = Pattern.compile("\\[座\\d+]\\s+空位").matcher(afterSeriveArea);
 		int result = 0;
 		while(m.find()){
 			result++;
